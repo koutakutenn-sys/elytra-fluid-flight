@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "elytra_fluid_flight",
+  "version": "${version}",
+  "name": "Elytra Fluid Flight",
+  "description": "Keep gliding and using firework boosts in water and lava, with configurable fluid drag and an optional Fire Resistance requirement.",
+  "environment": "*",
+  "license": "MIT",
+  "entrypoints": { "main": ["dev.elytrafluidflight.ElytraFluidFlight"] },
+  "mixins": ["elytra_fluid_flight.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.2",
+    "java": ">=25"
+  }
+}
