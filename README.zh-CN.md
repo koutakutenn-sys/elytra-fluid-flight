@@ -127,4 +127,4 @@ gradlew.bat build
 
 ## 许可
 
-以 [Unlicense](https://unlicense.org) 释出，即放弃著作权、进入公有领域。详见 [LICENSE](LICENSE)。
+双许可，任选其一：以 [Unlicense](https://unlicense.org) 释出、进入公有领域，或采用 [MIT 许可](https://opensource.org/license/mit)。详见 [LICENSE](LICENSE) 与 [LICENSE-MIT](LICENSE-MIT)。

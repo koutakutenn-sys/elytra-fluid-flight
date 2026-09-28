@@ -28,6 +28,9 @@ Changed
   * Integration suite extended from 47 to 52 checks: per-tick retention values, a
     regression check that liquid drag cannot compound into a stop, and checks that
     swimming blocks the glide launch but non-swimming players can still launch.
+  * License changed to a dual license: the mod is now offered under the Unlicense
+    or, alternatively, under the MIT license. Both texts ship with the project
+    (LICENSE and LICENSE-MIT).
 
 
 1.0.0+mc26.2 - 2026-09-28
@@ -68,6 +71,8 @@ License
   * 版本号升到 1.0.1+mc26.2。
   * 集成测试从 47 项扩展到 52 项：加入每刻保留比例、液体阻力不可复利归零的回归检查，
     以及「游泳阻止起飞、未游泳可正常起飞」的检查。
+  * 许可证改为双许可：本模组现在以 Unlicense 或 MIT 授权释出，二选一。两份正文都随
+    专案提供（LICENSE 与 LICENSE-MIT）。
 
 
 1.0.0+mc26.2 - 2026-09-28（简体中文）

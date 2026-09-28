@@ -127,4 +127,4 @@ gradlew.bat build
 
 ## 授權
 
-以 [Unlicense](https://unlicense.org) 釋出，進入公共領域。詳見 [LICENSE](LICENSE)。
+雙重授權，任擇其一：以 [Unlicense](https://unlicense.org) 釋出並進入公共領域，或採用 [MIT 授權](https://opensource.org/license/mit)。詳見 [LICENSE](LICENSE) 與 [LICENSE-MIT](LICENSE-MIT)。

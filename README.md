@@ -127,4 +127,4 @@ Please open an issue and include your Minecraft version, Fabric Loader version, 
 
 ## License
 
-Released into the public domain under the [Unlicense](https://unlicense.org). See [LICENSE](LICENSE).
+Dual licensed, pick whichever you prefer: released into the public domain under the [Unlicense](https://unlicense.org), or under the [MIT License](https://opensource.org/license/mit). See [LICENSE](LICENSE) and [LICENSE-MIT](LICENSE-MIT).
