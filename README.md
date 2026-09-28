@@ -1,29 +1,59 @@
 # Elytra Fluid Flight
 
-为 **Minecraft Java 26.2 / Fabric Loader 0.19.5 / Java 25** 制作的水下、岩浆鞘翅飞行模组。
+**Keep gliding — and keep using firework boosts — underwater and in lava.**
 
-## 安装
+Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your elytra folds away the moment you touch water or lava; with this mod installed you keep flying, using the vanilla glide physics plus a configurable amount of extra drag.
 
-1. 将 `elytra-fluid-flight-1.0.0+mc26.2.jar` 放入对应游戏实例的 `mods` 文件夹。
-2. 启动 Minecraft 26.2，使用 Fabric Loader 0.19.5（模组声明允许更高 Loader 版本，但验证版本为 0.19.5）。
-3. 无需额外安装 Fabric API、Cloth Config 或 Mod Menu。
-4. 单人游戏安装到客户端即可。多人游戏的**客户端与服务器均需安装，并使用相同配置**；本版本没有自动同步配置。
+[English](README.md) | [简体中文](README.zh-CN.md)
 
-这是 Fabric 模组，不适用于 Forge、NeoForge、基岩版或其他 Minecraft 版本。
+## Features
 
-## 功能与操作
+- **Glide in water and lava.** Enter a liquid while flying and the glide continues instead of ending.
+- **Start flying while submerged.** Float off the bottom of the water or lava, then press jump to open your elytra.
+- **Fireworks still work.** Right-click a firework rocket to boost — underwater and in lava too — with vanilla consumption and boost duration preserved.
+- **Tunable drag.** Choose how much of your speed is kept each tick in water and in lava.
+- **Optional Fire Resistance rule.** Require an actual Fire Resistance effect before lava gliding is allowed.
+- **Vanilla stays vanilla.** Elytra durability, landing, levitation and ladder restrictions, and drowning, burning and explosion damage all still apply.
 
-- 穿着可用鞘翅滑翔进入水或岩浆时，继续使用鞘翅移动逻辑。
-- 已在液体中时，离开地面后按跳跃键，也可以展开鞘翅。站在水底或岩浆底部时，先浮起再按一次跳跃。
-- 滑翔时右键使用烟花，水下和岩浆中仍可推进；保留原版烟花消耗和飞行时间。
-- 水中默认额外阻力倍率 `0.6`，岩浆默认 `0.35`。
-- 可启用“必须有耐火效果才能在岩浆中飞行”；耐火消失时会结束岩浆中的滑翔。
-- 保留鞘翅耐久消耗、落地收翼、漂浮效果限制、梯子限制和原版装备检查。
-- 保留溺水、岩浆灼伤及烟花爆炸伤害；这个模组不赋予水下呼吸或耐火效果。
+## Requirements
 
-## 配置
+| | |
+| --- | --- |
+| Minecraft | Java Edition **26.2** |
+| Mod loader | **Fabric Loader 0.19.5** or newer (verified with 0.19.5) |
+| Java | **25** or newer |
+| Other mods | None required — no Fabric API, Cloth Config or Mod Menu |
 
-首次启动自动生成实例目录下的 `config/elytra_fluid_flight.json`：
+This is a Fabric mod. It does not work on Forge, NeoForge, Bedrock Edition, or other Minecraft versions.
+
+## Installation
+
+**Singleplayer (client only)**
+
+1. Install Fabric Loader 0.19.5 or newer for Minecraft 26.2.
+2. Put `elytra-fluid-flight-<version>+mc26.2.jar` into your instance's `mods` folder.
+3. Launch Minecraft. That's it — no extra dependencies.
+
+Do not install the file whose name ends with `-sources.jar`; that one is for developers.
+
+**Multiplayer**
+
+- Both the client **and** the server must have the mod installed.
+- Both sides should use the same settings. This version does not sync config between client and server.
+
+## How to use
+
+- Fly into water or lava with your elytra open: the glide continues, at the speed set by your config.
+- Already in a liquid? Swim clear of the bottom so you are no longer standing on a block, then press jump to open the elytra.
+- Right-click a firework while gliding — including in water and lava — to boost.
+- Landing on the ground closes the elytra, exactly as in vanilla.
+
+## Configuration
+
+The config file is created automatically the first time you launch:
+
+- Client: `.minecraft/config/elytra_fluid_flight.json`
+- Server: `<server folder>/config/elytra_fluid_flight.json`
 
 ```json
 {
@@ -33,22 +63,35 @@
 }
 ```
 
-| 配置项 | 默认值 | 含义 |
+| Option | Default | Description |
 | --- | --- | --- |
-| `waterSpeedMultiplier` | `0.6` | 水中鞘翅移动的额外速度保留比例 |
-| `lavaSpeedMultiplier` | `0.35` | 岩浆中鞘翅移动的额外速度保留比例 |
-| `lavaRequiresFireResistance` | `false` | 改为 `true` 后要求实际的耐火药水效果 |
+| `waterSpeedMultiplier` | `0.6` | Fraction of the vanilla elytra velocity kept each tick while in water. |
+| `lavaSpeedMultiplier` | `0.35` | Same, for lava. |
+| `lavaRequiresFireResistance` | `false` | Set to `true` to require the Fire Resistance effect before gliding in lava. When the effect runs out, lava gliding ends. |
 
-倍率范围为 `0 < 倍率 <= 1`。这是**每个游戏刻**对原版鞘翅物理计算后的速度向量乘以该倍率，不是固定的最高速度比例。
-数值越小，阻力越大；`1.0` 表示没有额外阻力，原版鞘翅空气阻力仍存在。
-默认 `0.6`、`0.35` 会很快减速，适合配合烟花；若希望惯性滑翔更久，可尝试 `0.9`、`0.8`。
-液体交界同时检测到水和岩浆时，优先采用岩浆设置。
+Things worth knowing:
 
-配置在启动时读取，修改后重启客户端和服务器。非法倍率回退到对应默认值；格式损坏时使用默认配置并记录日志，保留原文件便于修正。
+- The valid range is `0 < value <= 1`. Each tick, the velocity produced by the vanilla elytra physics is multiplied by this value. It is not a fixed top-speed percentage, and vanilla air drag still applies on top.
+- Lower values mean more drag. The defaults `0.6` and `0.35` slow you down quickly and are meant to be used together with fireworks. For long, floaty glides, try `0.9` and `0.8`.
+- If water and lava are detected at the same time on a liquid boundary, the lava setting wins.
+- An out-of-range value falls back to that option's default and is logged. If the file is corrupt, the defaults are used and your file is left untouched so you can fix it.
+- Settings are read at startup: restart the game or server after editing. In multiplayer, keep both sides the same.
 
-## 构建源码
+## What this mod does not change
 
-需要 JDK 25。项目自带 Gradle 9.5.1 Wrapper，首次构建需要网络下载依赖。
+- Elytra durability, landing, levitation, ladder restrictions, and the vanilla "needs a working elytra" check.
+- Drowning, lava burn, and firework explosion damage. This mod grants no Water Breathing and no Fire Resistance.
+- The firework rocket itself: no item or entity is replaced. Vanilla already propels a player who is fall-flying, so boosts simply work in liquids too.
+
+## Compatibility
+
+- Mods that change player movement or elytra physics, and server-side anticheat plugins, may need their own compatibility check.
+- No Fabric API is required. Fabric API based modpacks should be fine as long as the mod is installed on both sides where relevant.
+- Verified with 47 automated checks on a real Minecraft 26.2 Fabric server, using actual water and lava blocks. Manual graphical client flying, modpack combinations, flowing liquids and bubble columns are still worth a look on your setup.
+
+## Building from source
+
+JDK 25 is required. The project ships with a Gradle wrapper, so the first build downloads its dependencies.
 
 ```sh
 # macOS / Linux
@@ -61,42 +104,20 @@ chmod +x gradlew
 gradlew.bat build
 ```
 
-安装 `build/libs/elytra-fluid-flight-1.0.0+mc26.2.jar`，不要安装名称带 `sources` 的 JAR。
-源码使用 Loom 1.17.21 和 26.2 原版类名，无需 Yarn 映射。
+The result is `build/libs/elytra-fluid-flight-<version>+mc26.2.jar`.
 
-## 集成测试
-
-测试使用实际 Minecraft 26.2 + Fabric Loader 0.19.5 服务端和已应用 Mixin 的游戏类，在独立临时测试世界中执行。
-测试玩家由 `Player` 派生，读取实际水/岩浆方块，并调用原版移动、烟花和装备逻辑。
-测试模组独立存放在 `src/integrationTest`，不会进入发行 JAR。
-
-在已阅读并接受 Minecraft EULA 的情况下运行：
+Integration tests run against a real Minecraft 26.2 + Fabric Loader 0.19.5 server on a temporary test world. They start a server bound to `127.0.0.1` on a dynamic port and shut it down when finished; your own saves are never touched. Run them only if you have read and accepted the Minecraft EULA:
 
 ```sh
 ./gradlew runIntegrationTest -PacceptMinecraftEula=true
 ```
 
-测试服务器仅监听 `127.0.0.1`，使用动态端口并在完成后退出；不会使用现有游戏存档。
-结果写入 `run-test/test-result.txt`。47 项检查覆盖：
+The summary is written to `run-test/test-result.txt`.
 
-- 配置创建、部分配置、越界/无穷值、格式损坏及原文件保留。
-- 空中起飞，两种液体中的起飞、入水保持滑翔、离开液体恢复空气物理。
-- 默认与自定义阻力倍率、滑翔时不切换游泳姿态。
-- 两种液体中的原版烟花推进与每次消耗一枚。
-- 落地、未穿鞘翅、鞘翅损坏、漂浮效果和耐久消耗。
-- 耐火条件开启、获得/失去耐火效果，以及水中行为不受该选项影响。
+## Reporting problems
 
-构建与上述 47 项服务端检查已通过。尚未进行图形客户端手动操控或完整整合包兼容性测试。
-发布前建议人工复核：持续滑翔进出液面、不同俯仰角下连续使用烟花、流动液体/气泡柱，以及联机双方配置相同的情况。
-修改玩家移动或鞘翅物理的其他模组，以及服务器反作弊插件，可能需要单独做兼容性验证。
+Please open an issue and include your Minecraft version, Fabric Loader version, whether you were in water or lava, your config file, and the relevant part of the log.
 
-## 实现说明
+## License
 
-仅对玩家生效。通过 `shouldTravelInFluid` 将正在液体中滑翔的玩家送入原版鞘翅移动分支；
-在 `updateFallFlyingMovement` 返回时施加倍率；局部放开水中起飞检查，并防止冲刺游泳姿态覆盖滑翔。
-保持真正的液体检测，不全局伪装为空气，因此呼吸、灼烧和液体相关逻辑仍能工作。
-原版烟花在 `isFallFlying()` 成立时就会推进，因此无需改写烟花实体或增加物品。
-
-开发参考：[Fabric 26.2 官方开发说明](https://fabricmc.net/2026/06/15/262.html)、[Fabric Loader 0.19.5 官方仓库](https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/)。
-
-许可证：MIT。
+MIT — see [LICENSE](LICENSE).
