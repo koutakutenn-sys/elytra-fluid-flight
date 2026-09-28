@@ -1,10 +1,10 @@
 <h1 align="center">Elytra Fluid Flight</h1>
 
+<p align="center"><strong>在水里、在岩浆里，继续滑翔，继续用烟花推进。</strong></p>
+
 <p align="center">
   <img src="docs/icon-512.png" width="512" alt="Elytra Fluid Flight：玩家在水下展开鞘翅滑翔，身后拖着烟花轨迹">
 </p>
-
-**在水里、在岩浆里，继续滑翔，继续用烟花推进。**
 
 Elytra Fluid Flight 是一个为 Minecraft Java 26.2 制作的小型 Fabric 模组。原版鞘翅一碰到水或岩浆就会收起来，装上这个模组后你可以继续飞行，使用原版滑翔物理，并叠加一份可自行调整的额外阻力。
 

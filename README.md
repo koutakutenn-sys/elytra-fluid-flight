@@ -1,10 +1,10 @@
 <h1 align="center">Elytra Fluid Flight</h1>
 
+<p align="center"><strong>Keep gliding — and keep using firework boosts — underwater and in lava.</strong></p>
+
 <p align="center">
   <img src="docs/icon-512.png" width="512" alt="Elytra Fluid Flight: a player gliding underwater with an elytra, trailing a firework rocket">
 </p>
-
-**Keep gliding — and keep using firework boosts — underwater and in lava.**
 
 Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your elytra folds away the moment you touch water or lava; with this mod installed you keep flying, using the vanilla glide physics plus a configurable amount of extra drag.
 
