@@ -13,6 +13,7 @@ Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your
 ## Features
 
 - **Glide in water and lava.** Enter a liquid while flying and the glide continues instead of ending.
+- **Swimming stays swimming.** Hold sprint under water and the vanilla swimming state takes over — water movement, swimming and diving — and jump means "swim up" instead of opening the elytra. Gliding and swimming never overlap: stop sprinting to glide again.
 - **Start flying while submerged.** Float off the bottom of the water or lava, then press jump to open your elytra.
 - **Fireworks still work.** Right-click a firework rocket to boost — underwater and in lava too — with vanilla consumption and boost duration preserved.
 - **Tunable drag.** Choose how much of your speed is kept each tick in water and in lava.
@@ -48,6 +49,7 @@ Do not install the file whose name ends with `-sources.jar`; that one is for dev
 ## How to use
 
 - Fly into water or lava with your elytra open: the glide continues, at the speed set by your config.
+- Want to swim instead? Hold sprint with your eyes under water. That enters the vanilla swimming state: water movement takes over (swim, dive, float) and jump means "swim up" instead of opening the elytra. Stop sprinting and the glide resumes. Water only — sprinting in lava changes nothing.
 - Already in a liquid? Swim clear of the bottom so you are no longer standing on a block, then press jump to open the elytra.
 - Right-click a firework while gliding — including in water and lava — to boost.
 - Landing on the ground closes the elytra, exactly as in vanilla.
@@ -69,14 +71,14 @@ The config file is created automatically the first time you launch:
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `waterSpeedMultiplier` | `0.6` | Fraction of the vanilla elytra velocity kept each tick while in water. |
-| `lavaSpeedMultiplier` | `0.35` | Same, for lava. |
+| `waterSpeedMultiplier` | `0.6` | Drag strength while gliding in water: lower means thicker water. See the notes below. |
+| `lavaSpeedMultiplier` | `0.35` | Same, for lava — lower means thicker lava. |
 | `lavaRequiresFireResistance` | `false` | Set to `true` to require the Fire Resistance effect before gliding in lava. When the effect runs out, lava gliding ends. |
 
 Things worth knowing:
 
-- The valid range is `0 < value <= 1`. Each tick, the velocity produced by the vanilla elytra physics is multiplied by this value. It is not a fixed top-speed percentage, and vanilla air drag still applies on top.
-- Lower values mean more drag. The defaults `0.6` and `0.35` slow you down quickly and are meant to be used together with fireworks. For long, floaty glides, try `0.9` and `0.8`.
+- The valid range is `0 < value <= 1`. It is a drag strength: lower values mean a thicker liquid, and `1.0` behaves exactly like vanilla air physics.
+- For stability only a tenth of the configured strength is applied as damping each tick, so `0.6` keeps roughly 96% of your speed per tick and `0.35` roughly 93.5%. That gives a clear "thicker liquid" feel while still letting you glide; the raw value is never multiplied into your entire velocity, which would bring a glide to a standstill within half a second.
 - If water and lava are detected at the same time on a liquid boundary, the lava setting wins.
 - An out-of-range value falls back to that option's default and is logged. If the file is corrupt, the defaults are used and your file is left untouched so you can fix it.
 - Settings are read at startup: restart the game or server after editing. In multiplayer, keep both sides the same.
@@ -85,6 +87,7 @@ Things worth knowing:
 
 - Elytra durability, landing, levitation, ladder restrictions, and the vanilla "needs a working elytra" check.
 - Drowning, lava burn, and firework explosion damage. This mod grants no Water Breathing and no Fire Resistance.
+- Swimming: holding sprint under water always uses vanilla water movement, including buoyancy and the swimming pose.
 - The firework rocket itself: no item or entity is replaced. Vanilla already propels a player who is fall-flying, so boosts simply work in liquids too.
 
 ## Compatibility

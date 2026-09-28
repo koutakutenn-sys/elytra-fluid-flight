@@ -18,9 +18,9 @@ public abstract class LivingEntityMixin {
     }
 
     @Inject(method = "updateFallFlyingMovement", at = @At("RETURN"), cancellable = true)
-    private void eff$applyFluidDrag(Vec3 movement, CallbackInfoReturnable<Vec3> cir) {
+    private void eff$applyLiquidDrag(Vec3 movement, CallbackInfoReturnable<Vec3> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
-        if (FluidFlight.active(self)) cir.setReturnValue(cir.getReturnValue().scale(FluidFlight.multiplier(self)));
+        if (FluidFlight.active(self)) cir.setReturnValue(cir.getReturnValue().scale(FluidFlight.retention(self)));
     }
 
     @Inject(method = "canGlide", at = @At("HEAD"), cancellable = true)

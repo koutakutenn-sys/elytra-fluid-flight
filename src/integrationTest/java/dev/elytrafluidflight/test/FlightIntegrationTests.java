@@ -44,9 +44,23 @@ public final class FlightIntegrationTests {
                 p.maintainFlight();
                 require(p.isFallFlying(), name + " stays gliding");
                 require(!p.fluidTravel(), name + " uses elytra physics");
-                double factor = fluid == Blocks.WATER ? 0.6 : 0.35;
+                double retention = retention(fluid);
                 Vec3 actual = travel(p);
-                require(actual.subtract(baseline.scale(factor)).length() < 1e-9, name + " configured drag ratio " + factor);
+                require(actual.subtract(baseline.scale(retention)).length() < 1e-9,
+                        name + " applies per-tick retention " + retention);
+
+                // Extra drag must not compound into a stop: after ten ticks of gliding in a liquid
+                // the player still keeps most of their horizontal speed.
+                TestPlayer steady = player(level, fluid);
+                steady.tryToStartFallFlying();
+                steady.setDeltaMovement(0, -0.1, 0.6);
+                double startSpeed = steady.getDeltaMovement().horizontalDistance();
+                for (int step = 0; step < 10; step++) {
+                    steady.setPos(10.5, 122, 10.5);
+                    steady.travel(Vec3.ZERO);
+                }
+                require(steady.getDeltaMovement().horizontalDistance() > startSpeed * 0.5,
+                        name + " drag does not compound to a stop");
 
                 // Existing air flight entering a liquid must retain its state.
                 TestPlayer entering = player(level, Blocks.AIR);
@@ -64,7 +78,12 @@ public final class FlightIntegrationTests {
                 p.setSprinting(true);
                 p.setSwimming(true);
                 p.updateSwimming();
-                require(!p.isSwimming() && p.isFallFlying(), name + " sprint does not select swimming pose");
+                if (fluid == Blocks.WATER) {
+                    require(p.isSwimming() && p.fluidTravel() && p.isFallFlying(),
+                            name + " sprint swimming keeps vanilla water movement");
+                } else {
+                    require(!p.isSwimming() && !p.fluidTravel(), name + " sprint does not select swimming pose");
+                }
                 p.setDeltaMovement(Vec3.ZERO);
                 FireworkRocketEntity rocket = new FireworkRocketEntity(level, new ItemStack(Items.FIREWORK_ROCKET), p);
                 rocket.tick();
@@ -98,6 +117,17 @@ public final class FlightIntegrationTests {
             ElytraFluidFlight.CONFIG.lavaRequiresFireResistance = true;
             TestPlayer lava = player(level, Blocks.LAVA);
             require(!lava.tryToStartFallFlying(), "Lava protection requirement blocks launch");
+
+            // Swimming and gliding must stay separate states.
+            TestPlayer swimmer = player(level, Blocks.WATER);
+            swimmer.setSprinting(true);
+            swimmer.setSwimming(true);
+            require(!swimmer.tryToStartFallFlying(), "Swimming blocks glide launch");
+            require(swimmer.fluidTravel(), "Swimming keeps vanilla water movement");
+            swimmer.setSprinting(false);
+            swimmer.setSwimming(false);
+            require(swimmer.tryToStartFallFlying(), "Glide launch works when not swimming");
+
             lava.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
             require(lava.tryToStartFallFlying(), "Fire Resistance allows lava launch");
             lava.removeEffect(MobEffects.FIRE_RESISTANCE);
@@ -110,12 +140,12 @@ public final class FlightIntegrationTests {
             ElytraFluidFlight.CONFIG.waterSpeedMultiplier = 0.8;
             water = player(level, Blocks.WATER);
             water.tryToStartFallFlying();
-            require(travel(water).subtract(baseline.scale(0.8)).length() < 1e-9, "Custom water multiplier 0.8");
+            require(travel(water).subtract(baseline.scale(0.98)).length() < 1e-9, "Custom water multiplier 0.8");
             ElytraFluidFlight.CONFIG.lavaRequiresFireResistance = false;
             ElytraFluidFlight.CONFIG.lavaSpeedMultiplier = 0.5;
             lava = player(level, Blocks.LAVA);
             lava.tryToStartFallFlying();
-            require(travel(lava).subtract(baseline.scale(0.5)).length() < 1e-9, "Custom lava multiplier 0.5");
+            require(travel(lava).subtract(baseline.scale(0.95)).length() < 1e-9, "Custom lava multiplier 0.5");
             Files.writeString(Path.of("test-result.txt"), "PASS: " + checks + " checks\n" + REPORT);
             ElytraFluidFlight.LOGGER.info("FLUID FLIGHT TESTS PASSED: {} checks", checks);
         } catch (Throwable error) {
@@ -181,6 +211,12 @@ public final class FlightIntegrationTests {
         player.setDeltaMovement(0, -0.1, 1);
         player.travel(Vec3.ZERO);
         return player.getDeltaMovement();
+    }
+
+    /** Mirrors FluidFlight.retention for the defaults used by these tests. */
+    private static double retention(Block fluid) {
+        double configured = fluid == Blocks.WATER ? 0.6 : 0.35;
+        return 1.0 - (1.0 - configured) * 0.10;
     }
 
     private static final class TestPlayer extends Player {
