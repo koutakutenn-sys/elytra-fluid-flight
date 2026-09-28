@@ -8,7 +8,7 @@
 
 Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your elytra folds away the moment you touch water or lava; with this mod installed you keep flying, using the vanilla glide physics plus a configurable amount of extra drag.
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-HK.md)
 
 ## Features
 
@@ -16,7 +16,7 @@ Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your
 - **Swimming stays swimming.** Hold sprint under water and the vanilla swimming state takes over — water movement, swimming and diving — and jump means "swim up" instead of opening the elytra. Gliding and swimming never overlap: stop sprinting to glide again.
 - **Start flying while submerged.** Float off the bottom of the water or lava, then press jump to open your elytra.
 - **Fireworks still work.** Right-click a firework rocket to boost — underwater and in lava too — with vanilla consumption and boost duration preserved.
-- **Tunable drag.** Choose how much of your speed is kept each tick in water and in lava.
+- **Tunable drag.** Choose how strongly water and lava slow a glide down.
 - **Optional Fire Resistance rule.** Require an actual Fire Resistance effect before lava gliding is allowed.
 - **Vanilla stays vanilla.** Elytra durability, landing, levitation and ladder restrictions, and drowning, burning and explosion damage all still apply.
 
@@ -94,7 +94,7 @@ Things worth knowing:
 
 - Mods that change player movement or elytra physics, and server-side anticheat plugins, may need their own compatibility check.
 - No Fabric API is required. Fabric API based modpacks should be fine as long as the mod is installed on both sides where relevant.
-- Verified with 47 automated checks on a real Minecraft 26.2 Fabric server, using actual water and lava blocks. Manual graphical client flying, modpack combinations, flowing liquids and bubble columns are still worth a look on your setup.
+- Verified with 52 automated checks on a real Minecraft 26.2 Fabric server, using actual water and lava blocks. Manual graphical client flying, modpack combinations, flowing liquids and bubble columns are still worth a look on your setup.
 
 ## Building from source
 
