@@ -1,6 +1,6 @@
 <h1 align="center">Elytra Fluid Flight</h1>
 
-<p align="center"><strong>在水里、在岩浆里，继续滑翔，继续用烟花推进。</strong></p>
+<p align="center"><strong>入水不坠，赴火不停；烟火为翼，驰骋无阻。</strong></p>
 
 <p align="center">
   <img src="docs/icon-512.png" width="512" alt="Elytra Fluid Flight：玩家在水下展开鞘翅滑翔，身后拖着烟花轨迹">
