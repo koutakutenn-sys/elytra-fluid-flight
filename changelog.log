@@ -1,0 +1,86 @@
+Elytra Fluid Flight - changelog
+===============================
+
+Versions are listed newest first. Each entry has an English section followed by a
+Simplified Chinese section.
+
+
+1.0.1+mc26.2 - 2026-09-28
+-------------------------
+
+Fixed
+  * Liquid drag no longer compounds. The configured value used to multiply the whole
+    elytra velocity every tick, so 0.6 left only 0.6^10 = 0.6% of the speed after half
+    a second and gliding in water or lava stalled almost immediately. Only a tenth of
+    the configured value is now applied as damping per tick: 0.6 keeps roughly 96% of
+    the speed per tick and 0.35 roughly 93.5%. Liquids still feel thicker than air,
+    but the player keeps their momentum.
+  * Swimming and gliding are now separate states. While the vanilla swimming state is
+    active (sprinting with your eyes under water) water movement takes over, and jump
+    means "swim up" instead of opening the elytra. Stop sprinting and the glide
+    resumes. Before this change the liquid glide blocked swimming entirely for as long
+    as an elytra was worn.
+  * README.md and README.zh-CN.md now describe the real drag behaviour and the new
+    swimming rule; the old text advertised behaviour the code did not have.
+
+Changed
+  * Version bumped to 1.0.1+mc26.2.
+  * Integration suite extended from 47 to 52 checks: per-tick retention values, a
+    regression check that liquid drag cannot compound into a stop, and checks that
+    swimming blocks the glide launch but non-swimming players can still launch.
+
+
+1.0.0+mc26.2 - 2026-09-28
+-------------------------
+
+Added
+  * First public release, built for Minecraft Java 26.2, Fabric Loader 0.19.5 and
+    Java 25.
+  * Elytra gliding continues in water and in lava instead of ending on contact.
+  * Launching the elytra while submerged: float clear of the bottom, then press jump.
+  * Firework boosts work in liquids, with vanilla consumption and boost duration.
+  * Configurable water and lava drag, plus an optional Fire Resistance requirement
+    for lava gliding.
+  * Vanilla behaviour kept: elytra durability, landing, levitation and ladder
+    restrictions, drowning, lava burn and explosion damage.
+  * A mod icon taken from an in-game underwater glide, shown in Mod Menu and Fabric
+    mod lists.
+
+License
+  * Released into the public domain under the Unlicense.
+
+
+1.0.1+mc26.2 - 2026-09-28（简体中文）
+------------------------------------
+
+修复
+  * 液体阻力不再复利。旧实现每个游戏刻都把整个鞘翅速度乘以配置值，0.6 在半秒后
+    只剩 0.6^10 = 0.6%，水里和岩浆里的滑翔几乎立刻停住。现在每刻只按配置值的一成
+    施加阻尼：0.6 相当于每刻保留约 96% 速度，0.35 约 93.5%。液体依然比空气更
+    「厚」，但玩家的惯性得以保留。
+  * 游泳与滑翔现在是两个互相隔离的状态。只要进入原版游泳状态（在水下按住冲刺），
+    移动就交回水的物理，跳跃只做上浮、不再展开鞘翅；松开冲刺后继续滑翔。改动之前，
+    只要穿着鞘翅，液体滑翔就会完全挡住游泳。
+  * README.md 与 README.zh-CN.md 改为描述真实的阻力行为与新的游泳规则，旧文案宣传的
+    是与代码不符的行为。
+
+变更
+  * 版本号升到 1.0.1+mc26.2。
+  * 集成测试从 47 项扩展到 52 项：加入每刻保留比例、液体阻力不可复利归零的回归检查，
+    以及「游泳阻止起飞、未游泳可正常起飞」的检查。
+
+
+1.0.0+mc26.2 - 2026-09-28（简体中文）
+------------------------------------
+
+新增
+  * 首个公开版本，面向 Minecraft Java 26.2、Fabric Loader 0.19.5、Java 25。
+  * 在水和岩浆中继续用鞘翅滑翔，而不是一接触就收翼。
+  * 液体中也能起飞：先浮离底部方块，再按跳跃键。
+  * 烟花推进在液体中同样有效，保留原版的消耗与飞行时间。
+  * 水中与岩浆中的阻力可配置，并可要求岩浆滑翔必须具备耐火效果。
+  * 保留原版行为：鞘翅耐久、落地收翼、漂浮与梯子限制、溺水、岩浆灼伤与爆炸伤害。
+  * 模组图标取自游戏内水下滑翔的截图，会显示在 Mod Menu 与 Fabric 模组列表里。
+
+许可
+  * 以 Unlicense 释出，进入公有领域。
