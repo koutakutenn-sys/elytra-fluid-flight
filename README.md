@@ -120,4 +120,4 @@ Please open an issue and include your Minecraft version, Fabric Loader version, 
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Released into the public domain under the [Unlicense](https://unlicense.org). See [LICENSE](LICENSE).

@@ -120,4 +120,4 @@ gradlew.bat build
 
 ## 许可
 
-MIT，详见 [LICENSE](LICENSE)。
+以 [Unlicense](https://unlicense.org) 释出，即放弃著作权、进入公有领域。详见 [LICENSE](LICENSE)。
