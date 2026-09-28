@@ -1,4 +1,8 @@
-# Elytra Fluid Flight
+<h1 align="center">Elytra Fluid Flight</h1>
+
+<p align="center">
+  <img src="docs/icon-512.png" width="512" alt="Elytra Fluid Flight：玩家在水下展开鞘翅滑翔，身后拖着烟花轨迹">
+</p>
 
 **在水里、在岩浆里，继续滑翔，继续用烟花推进。**
 
