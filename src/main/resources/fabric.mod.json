@@ -6,6 +6,11 @@
   "description": "Keep gliding and using firework boosts in water and lava, with configurable fluid drag and an optional Fire Resistance requirement.",
   "environment": "*",
   "license": "MIT OR Unlicense",
+  "contact": {
+    "homepage": "https://github.com/koutakutenn-sys/elytra-fluid-flight",
+    "issues": "https://github.com/koutakutenn-sys/elytra-fluid-flight/issues",
+    "sources": "https://github.com/koutakutenn-sys/elytra-fluid-flight"
+  },
   "icon": "assets/elytra_fluid_flight/icon.png",
   "entrypoints": {
     "main": ["dev.elytrafluidflight.ElytraFluidFlight"],
