@@ -18,6 +18,7 @@ Elytra Fluid Flight 是一个为 Minecraft Java 26.2 制作的小型 Fabric 模�
 - **烟花照常可用。** 滑翔时右键烟花即可推进，水中和岩浆中同样有效，保留原版的消耗与飞行时间。
 - **阻力可调。** 自行决定水和岩浆的阻力强度。
 - **可选的耐火要求。** 可以要求玩家必须拥有耐火效果才能在岩浆中滑翔。
+- **游戏内设置。** 装了 Mod Menu 就能点它的设置按钮修改全部选项，不用手动编辑配置文件。
 - **原版规则不变。** 鞘翅耐久、落地收翼、漂浮效果与梯子限制，以及溺水、岩浆灼伤和爆炸伤害，全部照旧生效。
 
 ## 环境要求
@@ -27,7 +28,7 @@ Elytra Fluid Flight 是一个为 Minecraft Java 26.2 制作的小型 Fabric 模�
 | Minecraft | Java 版 **26.2** |
 | 模组加载器 | **Fabric Loader 0.19.5** 或更高（验证版本 0.19.5） |
 | Java | **25** 或更高 |
-| 其他模组 | 无需安装 Fabric API、Cloth Config 或 Mod Menu |
+| 其他模组 | 无需安装 Fabric API 或 Cloth Config；Mod Menu 是可选的，只用于提供游戏内设置界面 |
 
 这是 Fabric 模组，不适用于 Forge、NeoForge、基岩版或其他 Minecraft 版本。
 
@@ -60,6 +61,8 @@ Elytra Fluid Flight 是一个为 Minecraft Java 26.2 制作的小型 Fabric 模�
 
 - 客户端：`.minecraft/config/elytra_fluid_flight.json`
 - 服务器：`<服务器目录>/config/elytra_fluid_flight.json`
+
+安装了 [Mod Menu](https://modrinth.com/mod/modmenu) 时，也可以在游戏内修改客户端配置：**Mod Menu → Elytra Fluid Flight → 设置**。界面编辑的是同一份文件，关闭时会写回；专用服务器仍然通过它自己的配置文件设置。
 
 ```json
 {

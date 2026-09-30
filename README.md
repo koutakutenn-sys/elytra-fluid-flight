@@ -18,6 +18,7 @@ Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your
 - **Fireworks still work.** Right-click a firework rocket to boost — underwater and in lava too — with vanilla consumption and boost duration preserved.
 - **Tunable drag.** Choose how strongly water and lava slow a glide down.
 - **Optional Fire Resistance rule.** Require an actual Fire Resistance effect before lava gliding is allowed.
+- **In-game settings.** With Mod Menu installed, every option can be changed from its config button — no file editing needed.
 - **Vanilla stays vanilla.** Elytra durability, landing, levitation and ladder restrictions, and drowning, burning and explosion damage all still apply.
 
 ## Requirements
@@ -27,7 +28,7 @@ Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your
 | Minecraft | Java Edition **26.2** |
 | Mod loader | **Fabric Loader 0.19.5** or newer (verified with 0.19.5) |
 | Java | **25** or newer |
-| Other mods | None required — no Fabric API, Cloth Config or Mod Menu |
+| Other mods | None required — no Fabric API, no Cloth Config. Mod Menu is optional and only adds the in-game settings screen. |
 
 This is a Fabric mod. It does not work on Forge, NeoForge, Bedrock Edition, or other Minecraft versions.
 
@@ -60,6 +61,8 @@ The config file is created automatically the first time you launch:
 
 - Client: `.minecraft/config/elytra_fluid_flight.json`
 - Server: `<server folder>/config/elytra_fluid_flight.json`
+
+With [Mod Menu](https://modrinth.com/mod/modmenu) installed you can also change the client options in game: **Mod Menu → Elytra Fluid Flight → settings**. The screen edits the same file and writes it when you close it. A dedicated server is still configured through its own config file.
 
 ```json
 {

@@ -4,10 +4,15 @@ plugins {
 version = project.mod_version
 group = 'dev.elytrafluidflight'
 base { archivesName = 'elytra-fluid-flight' }
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+    // Mod Menu is a compile-only dependency: it is only needed to build the optional config screen.
+    maven { url = 'https://maven.terraformersmc.com/releases/' }
+}
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 processResources {
     inputs.property 'version', project.version

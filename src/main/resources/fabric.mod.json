@@ -7,11 +7,17 @@
   "environment": "*",
   "license": "Unlicense",
   "icon": "assets/elytra_fluid_flight/icon.png",
-  "entrypoints": { "main": ["dev.elytrafluidflight.ElytraFluidFlight"] },
+  "entrypoints": {
+    "main": ["dev.elytrafluidflight.ElytraFluidFlight"],
+    "modmenu": ["dev.elytrafluidflight.client.ModMenuIntegration"]
+  },
   "mixins": ["elytra_fluid_flight.mixins.json"],
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": "26.2",
     "java": ">=25"
+  },
+  "suggests": {
+    "modmenu": ">=20.0.0"
   }
 }

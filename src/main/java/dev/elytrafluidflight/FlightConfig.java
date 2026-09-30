@@ -39,6 +39,16 @@ public final class FlightConfig {
         }
     }
 
+    /** Writes this config back to disk, creating the parent directory when needed. */
+    public void save(Path path) {
+        try {
+            Files.createDirectories(path.getParent());
+            Files.writeString(path, GSON.toJson(this) + "\n", StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            ElytraFluidFlight.LOGGER.error("Could not write {}", path, e);
+        }
+    }
+
     private static double validMultiplier(double value, double fallback, String name) {
         if (Double.isFinite(value) && value > 0.0 && value <= 1.0) return value;
         ElytraFluidFlight.LOGGER.warn("{} must be finite and in (0, 1]; using {}", name, fallback);

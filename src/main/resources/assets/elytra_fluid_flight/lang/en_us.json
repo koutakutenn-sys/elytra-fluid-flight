@@ -1,0 +1,8 @@
+{
+  "elytra_fluid_flight.config.title": "Elytra Fluid Flight settings",
+  "elytra_fluid_flight.config.waterSpeedMultiplier": "Water drag strength: %s",
+  "elytra_fluid_flight.config.lavaSpeedMultiplier": "Lava drag strength: %s",
+  "elytra_fluid_flight.config.lavaRequiresFireResistance": "Lava gliding requires Fire Resistance",
+  "elytra_fluid_flight.config.lavaSwimmingWithFireResistance": "Allow lava swimming with Fire Resistance",
+  "elytra_fluid_flight.config.lavaSwimmingWithoutFireResistance": "Allow lava swimming without Fire Resistance"
+}
