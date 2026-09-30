@@ -128,6 +128,43 @@ public final class FlightIntegrationTests {
             swimmer.setSwimming(false);
             require(swimmer.tryToStartFallFlying(), "Glide launch works when not swimming");
 
+            // Optional lava swimming (1.0.2): off by default, and the Fire Resistance case has its
+            // own switch because vanilla never enters the swimming pose outside of water.
+            ElytraFluidFlight.CONFIG.lavaRequiresFireResistance = false;
+            TestPlayer lavaGlider = player(level, Blocks.LAVA);
+            lavaGlider.tryToStartFallFlying();
+            lavaGlider.setSprinting(true);
+            lavaGlider.updateSwimming();
+            require(lavaGlider.isFallFlying() && !lavaGlider.isSwimming() && !lavaGlider.fluidTravel(),
+                    "Lava swimming off by default");
+
+            ElytraFluidFlight.CONFIG.lavaSwimmingWithoutFireResistance = true;
+            TestPlayer lavaSwimmer = player(level, Blocks.LAVA);
+            lavaSwimmer.tryToStartFallFlying();
+            lavaSwimmer.setSprinting(true);
+            lavaSwimmer.updateSwimming();
+            require(lavaSwimmer.isSwimming() && lavaSwimmer.fluidTravel(),
+                    "Lava swimming allowed without Fire Resistance");
+
+            lavaSwimmer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
+            lavaSwimmer.updateSwimming();
+            require(!lavaSwimmer.isSwimming() && !lavaSwimmer.fluidTravel(),
+                    "Fire Resistance uses its own lava swimming option");
+
+            ElytraFluidFlight.CONFIG.lavaSwimmingWithoutFireResistance = false;
+            ElytraFluidFlight.CONFIG.lavaSwimmingWithFireResistance = true;
+            lavaSwimmer.updateSwimming();
+            require(lavaSwimmer.isSwimming() && lavaSwimmer.fluidTravel(),
+                    "Lava swimming allowed with Fire Resistance");
+
+            TestPlayer lavaLaunch = player(level, Blocks.LAVA);
+            lavaLaunch.setSprinting(true);
+            lavaLaunch.setSwimming(true);
+            require(!lavaLaunch.tryToStartFallFlying(), "Lava swimming blocks glide launch");
+
+            ElytraFluidFlight.CONFIG.lavaSwimmingWithFireResistance = false;
+            ElytraFluidFlight.CONFIG.lavaRequiresFireResistance = true;
+
             lava.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
             require(lava.tryToStartFallFlying(), "Fire Resistance allows lava launch");
             lava.removeEffect(MobEffects.FIRE_RESISTANCE);

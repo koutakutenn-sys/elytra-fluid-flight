@@ -12,6 +12,8 @@ public final class FlightConfig {
     public double waterSpeedMultiplier = 0.6;
     public double lavaSpeedMultiplier = 0.35;
     public boolean lavaRequiresFireResistance = false;
+    public boolean lavaSwimmingWithFireResistance = false;
+    public boolean lavaSwimmingWithoutFireResistance = false;
 
     public static FlightConfig load(Path path) {
         if (!Files.exists(path)) {

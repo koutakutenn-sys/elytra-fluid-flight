@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class PlayerMixin {
     @ModifyExpressionValue(method = "tryToStartFallFlying", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isInWater()Z"))
     private boolean eff$allowUnderwaterLaunch(boolean original) {
-        // Only relax this launch check, and only while the player is not swimming: water no longer
-        // blocks opening the elytra, but jumping under water as a swimmer still means "swim up".
-        // Real fluid detection, breathing and damage remain intact.
-        return original && FluidFlight.swimming((Player) (Object) this);
+        // Water no longer blocks opening the elytra, but a swimming player (in water or, when the
+        // config allows it, in lava) keeps the vanilla meaning of jump: swim up. Real fluid
+        // detection, breathing and damage remain intact.
+        return FluidFlight.swimming((Player) (Object) this);
     }
 }

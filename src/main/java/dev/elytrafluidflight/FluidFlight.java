@@ -3,6 +3,7 @@ package dev.elytrafluidflight;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.tags.FluidTags;
 
 public final class FluidFlight {
     /**
@@ -31,7 +32,24 @@ public final class FluidFlight {
      * swimming player keeps vanilla behaviour when jumping instead of opening the elytra.
      */
     public static boolean swimming(LivingEntity entity) {
-        return entity.isSwimming() || (entity.isSprinting() && entity.isUnderWater());
+        return entity.isSwimming() || (entity.isSprinting() && entity.isUnderWater()) || lavaSwimming(entity);
+    }
+
+    /** True when the config lets this player enter the swimming state while in lava. */
+    public static boolean lavaSwimmingAllowed(LivingEntity entity) {
+        boolean fireResistant = entity.hasEffect(MobEffects.FIRE_RESISTANCE);
+        return fireResistant ? ElytraFluidFlight.CONFIG.lavaSwimmingWithFireResistance
+                : ElytraFluidFlight.CONFIG.lavaSwimmingWithoutFireResistance;
+    }
+
+    /**
+     * Optional lava swimming. Vanilla only ever enters the swimming pose in water, so this mirrors
+     * the vanilla condition (sprinting with the eyes in the fluid) for lava. Disabled by default,
+     * and the Fire Resistance case is configured separately from the non-resistant one.
+     */
+    public static boolean lavaSwimming(LivingEntity entity) {
+        return entity instanceof Player && entity.isInLava() && entity.isSprinting()
+                && entity.isEyeInFluid(FluidTags.LAVA) && lavaSwimmingAllowed(entity);
     }
 
     /** True while gliding in a liquid should override the liquid movement. */

@@ -1,5 +1,7 @@
 {
   "waterSpeedMultiplier": 0.6,
   "lavaSpeedMultiplier": 0.35,
-  "lavaRequiresFireResistance": false
+  "lavaRequiresFireResistance": false,
+  "lavaSwimmingWithFireResistance": false,
+  "lavaSwimmingWithoutFireResistance": false
 }

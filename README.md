@@ -65,7 +65,9 @@ The config file is created automatically the first time you launch:
 {
   "waterSpeedMultiplier": 0.6,
   "lavaSpeedMultiplier": 0.35,
-  "lavaRequiresFireResistance": false
+  "lavaRequiresFireResistance": false,
+  "lavaSwimmingWithFireResistance": false,
+  "lavaSwimmingWithoutFireResistance": false
 }
 ```
 
@@ -74,12 +76,15 @@ The config file is created automatically the first time you launch:
 | `waterSpeedMultiplier` | `0.6` | Drag strength while gliding in water: lower means thicker water. See the notes below. |
 | `lavaSpeedMultiplier` | `0.35` | Same, for lava — lower means thicker lava. |
 | `lavaRequiresFireResistance` | `false` | Set to `true` to require the Fire Resistance effect before gliding in lava. When the effect runs out, lava gliding ends. |
+| `lavaSwimmingWithFireResistance` | `false` | Allow the swimming state in lava while you have Fire Resistance. Vanilla never enters it outside of water. |
+| `lavaSwimmingWithoutFireResistance` | `false` | Same, for lava swimming without Fire Resistance. |
 
 Things worth knowing:
 
 - The valid range is `0 < value <= 1`. It is a drag strength: lower values mean a thicker liquid, and `1.0` behaves exactly like vanilla air physics.
 - For stability only a tenth of the configured strength is applied as damping each tick, so `0.6` keeps roughly 96% of your speed per tick and `0.35` roughly 93.5%. That gives a clear "thicker liquid" feel while still letting you glide; the raw value is never multiplied into your entire velocity, which would bring a glide to a standstill within half a second.
 - If water and lava are detected at the same time on a liquid boundary, the lava setting wins.
+- Lava is not swimmable in vanilla, so the two `lavaSwimming…` options are off by default. Turn on the one that matches your situation — they apply independently: holding sprint with your eyes in lava then puts you into the same swimming state as water, liquid movement takes over, and jump means "swim up" instead of opening the elytra.
 - An out-of-range value falls back to that option's default and is logged. If the file is corrupt, the defaults are used and your file is left untouched so you can fix it.
 - Settings are read at startup: restart the game or server after editing. In multiplayer, keep both sides the same.
 

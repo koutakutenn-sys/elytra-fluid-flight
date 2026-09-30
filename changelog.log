@@ -5,6 +5,24 @@ Versions are listed newest first. Each entry has an English section followed by 
 Simplified Chinese section.
 
 
+1.0.2+mc26.2 - 2026-09-30
+-------------------------
+
+Added
+  * Optional lava swimming, controlled by two new config options:
+    `lavaSwimmingWithFireResistance` and `lavaSwimmingWithoutFireResistance`. Both are off
+    by default, because vanilla never enters the swimming state outside of water.
+  * With the option matching the player's situation enabled, holding sprint with your eyes
+    in lava enters the same swimming state as water: liquid movement takes over and jump
+    means "swim up" instead of opening the elytra. Lava gliding is unchanged while both
+    options stay off.
+  * Five integration checks cover the defaults, both Fire Resistance cases, and that lava
+    swimming blocks the glide launch (57 checks in total).
+
+Changed
+  * Version bumped to 1.0.2+mc26.2.
+
+
 1.0.1+mc26.2 - 2026-09-28
 -------------------------
 
@@ -51,6 +69,22 @@ Added
 
 License
   * Released into the public domain under the Unlicense.
+
+
+1.0.2+mc26.2 - 2026-09-30（简体中文）
+------------------------------------
+
+新增
+  * 可选的岩浆游泳，由两个新配置项控制：`lavaSwimmingWithFireResistance` 与
+    `lavaSwimmingWithoutFireResistance`，默认都是关闭——原版在非水液体里不会进入游泳
+    状态，所以在启用对应选项之前，岩浆依旧不能游泳。
+  * 开启与自身情况相符的那一项后，在岩浆中按住冲刺、眼睛浸在岩浆里，就会像在水里一样
+    进入游泳状态：移动交回液体物理，跳跃只作上浮、不再展开鞘翅。两项都关闭时，岩浆滑翔
+    照旧，行为与 1.0.1 一致。
+  * 新增 5 项集成检查，覆盖默认值、两种耐火情况，以及「岩浆游泳阻止起飞」（合计 57 项）。
+
+变更
+  * 版本号升到 1.0.2+mc26.2。
 
 
 1.0.1+mc26.2 - 2026-09-28（简体中文）
