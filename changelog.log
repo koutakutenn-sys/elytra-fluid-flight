@@ -38,6 +38,8 @@ Fixed
 
 Changed
   * Version bumped to 1.0.2+mc26.2.
+  * The jar metadata now declares the dual license as the SPDX expression `MIT OR Unlicense`
+    instead of the plain `Unlicense`.
   * Integration suite extended to 80 checks: entering, keeping the state at the lava surface,
     leaving the lava, ending it by releasing sprint, the Fire Resistance requirement, the
     legacy config migration, the water-physics swap, and the unchanged water behaviour.
@@ -116,6 +118,7 @@ License
 
 变更
   * 版本号升到 1.0.2+mc26.2。
+  * jar 元数据现在以 SPDX 表达式 `MIT OR Unlicense` 声明双许可，不再是单一的 `Unlicense`。
   * 集成测试扩展到 80 项：进入、在岩浆液面维持、离开岩浆、松开冲刺结束、耐火限定条件、旧配置
     迁移、水物理替换，以及水中行为不变。
 

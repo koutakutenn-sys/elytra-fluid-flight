@@ -14,10 +14,11 @@ Elytra Fluid Flight is a small Fabric mod for Minecraft Java 26.2. Normally your
 
 - **Glide in water and lava.** Enter a liquid while flying and the glide continues instead of ending.
 - **Swimming stays swimming.** Hold sprint under water and the vanilla swimming state takes over — water movement, swimming and diving — and jump means "swim up" instead of opening the elytra. Gliding and swimming never overlap: stop sprinting to glide again.
+- **Swim in lava too, if you want.** With `lavaSwimming` enabled, holding sprint with your eyes in lava enters that same swimming state, and movement switches to the water physics, so you can sprint and swim up there as well. `lavaSwimmingRequiresFireResistance` can restrict it to players with the Fire Resistance effect.
 - **Start flying while submerged.** Float off the bottom of the water or lava, then press jump to open your elytra.
 - **Fireworks still work.** Right-click a firework rocket to boost — underwater and in lava too — with vanilla consumption and boost duration preserved.
 - **Tunable drag.** Choose how strongly water and lava slow a glide down.
-- **Optional Fire Resistance rule.** Require an actual Fire Resistance effect before lava gliding is allowed.
+- **Optional Fire Resistance rule.** Require an actual Fire Resistance effect before lava gliding is allowed — and, separately, before lava swimming is allowed.
 - **In-game settings.** With Mod Menu installed, every option can be changed from its config button — no file editing needed.
 - **Vanilla stays vanilla.** Elytra durability, landing, levitation and ladder restrictions, and drowning, burning and explosion damage all still apply.
 
