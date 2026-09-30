@@ -3,9 +3,11 @@ package dev.elytrafluidflight.test;
 import com.mojang.authlib.GameProfile;
 import dev.elytrafluidflight.ElytraFluidFlight;
 import dev.elytrafluidflight.FlightConfig;
+import dev.elytrafluidflight.FluidFlight;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -128,8 +130,8 @@ public final class FlightIntegrationTests {
             swimmer.setSwimming(false);
             require(swimmer.tryToStartFallFlying(), "Glide launch works when not swimming");
 
-            // Optional lava swimming (1.0.2): off by default, and the Fire Resistance case has its
-            // own switch because vanilla never enters the swimming pose outside of water.
+            // Optional lava swimming (1.0.2): off by default, because vanilla never enters the
+            // swimming pose outside of water.
             ElytraFluidFlight.CONFIG.lavaRequiresFireResistance = false;
             TestPlayer lavaGlider = player(level, Blocks.LAVA);
             lavaGlider.tryToStartFallFlying();
@@ -137,32 +139,128 @@ public final class FlightIntegrationTests {
             lavaGlider.updateSwimming();
             require(lavaGlider.isFallFlying() && !lavaGlider.isSwimming() && !lavaGlider.fluidTravel(),
                     "Lava swimming off by default");
+            // These two are what the client sprint mixin ORs into canStartSprinting and
+            // shouldStopSwimSprinting, so a disabled option provably leaves vanilla sprinting alone.
+            require(!FluidFlight.lavaSwimmingInPlay(lavaGlider) && !FluidFlight.lavaSubmerged(lavaGlider),
+                    "Lava sprint gates off by default");
 
-            ElytraFluidFlight.CONFIG.lavaSwimmingWithoutFireResistance = true;
+            ElytraFluidFlight.CONFIG.lavaSwimming = true;
+            require(FluidFlight.lavaSwimmingInPlay(lavaGlider) && FluidFlight.lavaSubmerged(lavaGlider),
+                    "Lava sprint gates follow the option");
+
+            // The path this fix targets: glide -> lava -> sprint -> swimming -> fluid travel.
             TestPlayer lavaSwimmer = player(level, Blocks.LAVA);
             lavaSwimmer.tryToStartFallFlying();
             lavaSwimmer.setSprinting(true);
+            require(FluidFlight.lavaSwimEntry(lavaSwimmer), "Gliding in lava can enter lava swimming");
             lavaSwimmer.updateSwimming();
-            require(lavaSwimmer.isSwimming() && lavaSwimmer.fluidTravel(),
+            require(lavaSwimmer.isSwimming() && lavaSwimmer.fluidTravel() && lavaSwimmer.isFallFlying(),
                     "Lava swimming allowed without Fire Resistance");
 
-            lavaSwimmer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
-            lavaSwimmer.updateSwimming();
-            require(!lavaSwimmer.isSwimming() && !lavaSwimmer.fluidTravel(),
-                    "Fire Resistance uses its own lava swimming option");
-
-            ElytraFluidFlight.CONFIG.lavaSwimmingWithoutFireResistance = false;
-            ElytraFluidFlight.CONFIG.lavaSwimmingWithFireResistance = true;
+            // Keeping the state: as in vanilla, once swimming only lava contact is required, so the
+            // eyes may leave the lava at the surface without dropping the state again. Eye height
+            // depends on the pose (standing 1.62, fall-flying/swimming 0.4), so the standing pose
+            // keeps the eyes clearly above the lava while the body stays inside it.
+            lavaSwimmer.setPose(Pose.STANDING);
+            lavaSwimmer.setPos(10.5, 124.5, 10.5);
+            lavaSwimmer.refreshFluid();
+            require(lavaSwimmer.isInLava() && !lavaSwimmer.isEyeInFluid(FluidTags.LAVA),
+                    "Lava surface exposes the eyes");
+            require(!FluidFlight.lavaSwimEntry(lavaSwimmer) && FluidFlight.lavaSwimMaintenance(lavaSwimmer),
+                    "Entering and keeping lava swimming are separate conditions");
             lavaSwimmer.updateSwimming();
             require(lavaSwimmer.isSwimming() && lavaSwimmer.fluidTravel(),
-                    "Lava swimming allowed with Fire Resistance");
+                    "Lava swimming survives the lava surface");
+
+            // Leaving the lava ends the state through the vanilla decision.
+            fill(level, Blocks.AIR);
+            lavaSwimmer.refreshFluid();
+            lavaSwimmer.updateSwimming();
+            require(!lavaSwimmer.isSwimming(), "Lava swimming exits outside the lava");
+
+            // Releasing sprint ends it too, exactly like a water swim.
+            lavaSwimmer = player(level, Blocks.LAVA);
+            lavaSwimmer.setSprinting(true);
+            lavaSwimmer.updateSwimming();
+            require(lavaSwimmer.isSwimming(), "Lava swimming enters from a plain sprint");
+            lavaSwimmer.setSprinting(false);
+            lavaSwimmer.updateSwimming();
+            require(!lavaSwimmer.isSwimming(), "Lava swimming exits when the sprint ends");
+
+            // Swimming in lava is moved with the water fluid physics (vanilla lava movement halves the
+            // horizontal velocity every tick and cannot be sprinted), so a lava swimmer must travel
+            // exactly like a water swimmer, while a lava player who is not swimming keeps lava physics.
+            TestPlayer waterReference = player(level, Blocks.WATER);
+            waterReference.setSprinting(true);
+            waterReference.setSwimming(true);
+            Vec3 waterSwimMovement = travel(waterReference);
+            require(!FluidFlight.lavaSwimmingUsesWaterPhysics(waterReference),
+                    "Water swimming keeps its own physics");
+
+            TestPlayer lavaReference = player(level, Blocks.LAVA);
+            lavaReference.setSprinting(true);
+            lavaReference.setSwimming(true);
+            require(FluidFlight.lavaSwimmingUsesWaterPhysics(lavaReference),
+                    "Lava swimming opts into water physics");
+            require(travel(lavaReference).subtract(waterSwimMovement).length() < 1e-9,
+                    "Lava swimming moves exactly like water swimming");
+
+            TestPlayer lavaWalk = player(level, Blocks.LAVA);
+            require(!FluidFlight.lavaSwimmingUsesWaterPhysics(lavaWalk),
+                    "Lava physics stay untouched without the swimming state");
+            require(travel(lavaWalk).subtract(waterSwimMovement).length() > 1e-6,
+                    "Plain lava movement is still slower than swimming");
+
+            // The Fire Resistance requirement only narrows the group that may swim: a resistant player
+            // can always swim, because being resistant never makes swimming harder.
+            lavaSwimmer = player(level, Blocks.LAVA);
+            lavaSwimmer.tryToStartFallFlying();
+            lavaSwimmer.setSprinting(true);
+            lavaSwimmer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
+            lavaSwimmer.updateSwimming();
+            require(lavaSwimmer.isSwimming() && lavaSwimmer.fluidTravel(),
+                    "Fire Resistance swims while nothing is required");
+
+            ElytraFluidFlight.CONFIG.lavaSwimmingRequiresFireResistance = true;
+            lavaSwimmer.updateSwimming();
+            require(lavaSwimmer.isSwimming() && lavaSwimmer.fluidTravel(),
+                    "Required Fire Resistance allows a resistant player");
+
+            lavaSwimmer.removeEffect(MobEffects.FIRE_RESISTANCE);
+            lavaSwimmer.updateSwimming();
+            require(!lavaSwimmer.isSwimming() && !lavaSwimmer.fluidTravel(),
+                    "Required Fire Resistance blocks a player without it");
 
             TestPlayer lavaLaunch = player(level, Blocks.LAVA);
             lavaLaunch.setSprinting(true);
             lavaLaunch.setSwimming(true);
             require(!lavaLaunch.tryToStartFallFlying(), "Lava swimming blocks glide launch");
 
-            ElytraFluidFlight.CONFIG.lavaSwimmingWithFireResistance = false;
+            // Water has to keep the vanilla state machine untouched: enter while submerged (through
+            // the real baseTick, which fills in wasEyeInWater), keep the state at the surface, leave
+            // the state outside the water.
+            TestPlayer surface = player(level, Blocks.WATER);
+            surface.setSprinting(true);
+            surface.baseTick();
+            require(surface.isSwimming(), "Water swimming still enters while submerged");
+            surface.setPose(Pose.STANDING);
+            surface.setPos(10.5, 124.5, 10.5);
+            surface.refreshFluid();
+            require(surface.isInWater() && !surface.isEyeInFluid(FluidTags.WATER),
+                    "Water surface exposes the eyes");
+            surface.updateSwimming();
+            require(surface.isSwimming() && surface.fluidTravel(),
+                    "Water swimming still keeps the state at the surface");
+            fill(level, Blocks.AIR);
+            surface.refreshFluid();
+            surface.updateSwimming();
+            require(!surface.isSwimming(), "Water swimming still exits outside the water");
+
+            // Later checks read the block at the player position, so put the tank back to lava.
+            fill(level, Blocks.LAVA);
+
+            ElytraFluidFlight.CONFIG.lavaSwimming = false;
+            ElytraFluidFlight.CONFIG.lavaSwimmingRequiresFireResistance = false;
             ElytraFluidFlight.CONFIG.lavaRequiresFireResistance = true;
 
             lava.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
@@ -211,6 +309,24 @@ public final class FlightIntegrationTests {
         Files.writeString(path, "{broken");
         require(FlightConfig.load(path).waterSpeedMultiplier == 0.6 && Files.readString(path).equals("{broken"),
                 "Malformed config falls back without overwriting");
+
+        // The two independent 1.0.2 lava swimming switches fold into the single switch plus the
+        // optional Fire Resistance requirement.
+        Files.writeString(path, "{\"lavaSwimmingWithFireResistance\":true}");
+        FlightConfig legacyWith = FlightConfig.load(path);
+        require(legacyWith.lavaSwimming && legacyWith.lavaSwimmingRequiresFireResistance,
+                "Legacy 'with Fire Resistance' becomes a requirement");
+        Files.writeString(path, "{\"lavaSwimmingWithoutFireResistance\":true}");
+        FlightConfig legacyWithout = FlightConfig.load(path);
+        require(legacyWithout.lavaSwimming && !legacyWithout.lavaSwimmingRequiresFireResistance,
+                "Legacy 'without Fire Resistance' becomes no requirement");
+        Files.writeString(path, "{\"lavaSwimmingWithFireResistance\":true,\"lavaSwimmingWithoutFireResistance\":true}");
+        FlightConfig legacyBoth = FlightConfig.load(path);
+        require(legacyBoth.lavaSwimming && !legacyBoth.lavaSwimmingRequiresFireResistance,
+                "Legacy both-on file becomes swimming without a requirement");
+        Files.writeString(path, "{\"lavaSwimming\":false,\"lavaSwimmingWithFireResistance\":true}");
+        require(!FlightConfig.load(path).lavaSwimming, "New lava swimming switch wins over legacy keys");
+
         Files.delete(path);
         Files.delete(dir);
     }

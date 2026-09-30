@@ -1,5 +1,6 @@
 package dev.elytrafluidflight.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.elytrafluidflight.FluidFlight;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.FluidState;
@@ -15,6 +16,14 @@ public abstract class LivingEntityMixin {
     @Inject(method = "shouldTravelInFluid", at = @At("HEAD"), cancellable = true)
     private void eff$useGlidingMovement(FluidState state, CallbackInfoReturnable<Boolean> cir) {
         if (FluidFlight.active((LivingEntity) (Object) this)) cir.setReturnValue(false);
+    }
+
+    @ModifyExpressionValue(method = "travelInFluid",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
+    private boolean eff$lavaSwimmingUsesWaterPhysics(boolean original) {
+        // Vanilla picks travelInLava whenever the player is not in water. Lava movement is far slower
+        // and cannot be sprinted, so a lava swimmer is moved like a water swimmer instead.
+        return original || FluidFlight.lavaSwimmingUsesWaterPhysics((LivingEntity) (Object) this);
     }
 
     @Inject(method = "updateFallFlyingMovement", at = @At("RETURN"), cancellable = true)

@@ -45,25 +45,36 @@ public final class ElytraFluidFlightConfigScreen extends Screen {
                 config.lavaSpeedMultiplier, value -> config.lavaSpeedMultiplier = value));
         y += ROW_HEIGHT + 8;
 
-        y = addToggle(x, y, "lavaRequiresFireResistance", "Lava gliding requires Fire Resistance",
+        addToggleRow(x, y, "lavaRequiresFireResistance", "Lava gliding requires Fire Resistance",
                 config.lavaRequiresFireResistance, value -> config.lavaRequiresFireResistance = value);
-        y = addToggle(x, y, "lavaSwimmingWithFireResistance", "Allow lava swimming with Fire Resistance",
-                config.lavaSwimmingWithFireResistance, value -> config.lavaSwimmingWithFireResistance = value);
-        addToggle(x, y, "lavaSwimmingWithoutFireResistance", "Allow lava swimming without Fire Resistance",
-                config.lavaSwimmingWithoutFireResistance, value -> config.lavaSwimmingWithoutFireResistance = value);
+        y += ROW_HEIGHT;
+        addToggleRow(x, y, "lavaSwimming", "Allow lava swimming", config.lavaSwimming, value -> {
+            config.lavaSwimming = value;
+            // Rebuild so the Fire Resistance requirement below greys out when swimming is off.
+            this.rebuildWidgets();
+        });
+        y += ROW_HEIGHT;
+        // Fire Resistance can never make swimming harder, so this narrows the group that may swim
+        // instead of being a second, competing permission.
+        addToggleRow(x, y, "lavaSwimmingRequiresFireResistance", "Lava swimming requires Fire Resistance",
+                config.lavaSwimmingRequiresFireResistance,
+                value -> config.lavaSwimmingRequiresFireResistance = value)
+                .active = config.lavaSwimming;
 
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> this.onClose())
                 .bounds(x, this.height - 34, WIDGET_WIDTH, WIDGET_HEIGHT)
                 .build());
     }
 
-    private int addToggle(int x, int y, String option, String fallback, boolean selected, Consumer<Boolean> setter) {
-        addRenderableWidget(Checkbox.builder(text(option, fallback), this.font)
+    private Checkbox addToggleRow(int x, int y, String option, String fallback, boolean selected,
+            Consumer<Boolean> setter) {
+        Checkbox box = Checkbox.builder(text(option, fallback), this.font)
                 .pos(x, y)
                 .selected(selected)
-                .onValueChange((box, value) -> setter.accept(value))
-                .build());
-        return y + ROW_HEIGHT;
+                .onValueChange((widget, value) -> setter.accept(value))
+                .build();
+        addRenderableWidget(box);
+        return box;
     }
 
     @Override

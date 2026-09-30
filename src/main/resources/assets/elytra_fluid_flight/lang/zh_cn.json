@@ -3,6 +3,6 @@
   "elytra_fluid_flight.config.waterSpeedMultiplier": "水中阻力强度：%s",
   "elytra_fluid_flight.config.lavaSpeedMultiplier": "岩浆阻力强度：%s",
   "elytra_fluid_flight.config.lavaRequiresFireResistance": "岩浆滑翔需要耐火效果",
-  "elytra_fluid_flight.config.lavaSwimmingWithFireResistance": "有耐火效果时允许岩浆游泳",
-  "elytra_fluid_flight.config.lavaSwimmingWithoutFireResistance": "没有耐火效果时允许岩浆游泳"
+  "elytra_fluid_flight.config.lavaSwimming": "允许在岩浆中游泳",
+  "elytra_fluid_flight.config.lavaSwimmingRequiresFireResistance": "岩浆游泳需要耐火效果"
 }

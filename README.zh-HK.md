@@ -50,7 +50,7 @@ Elytra Fluid Flight 是一個為 Minecraft Java 26.2 而設的小型 Fabric 模�
 ## 使用說明
 
 - 展開鞘翅飛進水或岩漿：滑翔會繼續，速度由你的設定決定。
-- 想游泳？在水底按住衝刺，眼睛要在水裡。這樣會進入原版游泳狀態：移動交回水的物理（游泳、下潛、上浮），跳躍只作上浮、不會展開鞘翅；放開衝刺即繼續滑翔。這一條只適用於水，在岩漿裡衝刺不會有任何改變。
+- 想游泳？在水底按住衝刺，眼睛要在水裡。這樣會進入原版游泳狀態：移動交回水的物理（游泳、下潛、上浮），跳躍只作上浮、不會展開鞘翅；放開衝刺即繼續滑翔。這一條預設只適用於水；開啟下方的 `lavaSwimming` 後亦適用於岩漿。
 - 已經在液體中？先游離底部方塊，再按跳躍展開鞘翅。
 - 滑翔時右鍵煙火即可推進，水中和岩漿中一樣有效。
 - 着地會收翼，與原版一致。
@@ -69,8 +69,8 @@ Elytra Fluid Flight 是一個為 Minecraft Java 26.2 而設的小型 Fabric 模�
   "waterSpeedMultiplier": 0.6,
   "lavaSpeedMultiplier": 0.35,
   "lavaRequiresFireResistance": false,
-  "lavaSwimmingWithFireResistance": false,
-  "lavaSwimmingWithoutFireResistance": false
+  "lavaSwimming": false,
+  "lavaSwimmingRequiresFireResistance": false
 }
 ```
 
@@ -79,15 +79,15 @@ Elytra Fluid Flight 是一個為 Minecraft Java 26.2 而設的小型 Fabric 模�
 | `waterSpeedMultiplier` | `0.6` | 水中滑翔的阻力強度：數值越小，水越黏稠。詳見下方說明。 |
 | `lavaSpeedMultiplier` | `0.35` | 同上，作用於岩漿——數值越小，岩漿越黏稠。 |
 | `lavaRequiresFireResistance` | `false` | 改為 `true` 後，必須擁有耐火效果才能在岩漿中滑翔；效果結束時岩漿滑翔會中止。 |
-| `lavaSwimmingWithFireResistance` | `false` | 擁有耐火效果時，允許在岩漿中觸發游泳。原版在岩漿裡永遠不會進入游泳狀態。 |
-| `lavaSwimmingWithoutFireResistance` | `false` | 同上，作用於沒有耐火效果的情況。 |
+| `lavaSwimming` | `false` | 允許在岩漿中觸發游泳狀態。原版在岩漿裡永遠不會進入游泳狀態，所以預設關閉。 |
+| `lavaSwimmingRequiresFireResistance` | `false` | 只有擁有耐火效果的玩家才能在岩漿中游泳。這是「限定條件」而非第二個許可開關：有耐火只會更安全，絕不會令游泳更難。 |
 
 幾點須知：
 
 - 有效範圍是 `0 < 數值 <= 1`。這是阻力強度：數值越小液體越黏稠，`1.0` 與原版空中物理完全一致。
 - 為求穩定，每個遊戲刻只按該強度的一成施加阻尼，所以 `0.6` 大約等於每刻保留 96% 速度、`0.35` 大約 93.5%。液體明顯更黏稠，但仍然飛得動；若每刻都把整個速度乘以該數值，半秒內就會幾乎停頓。
 - 液體交界同時偵測到水和岩漿時，採用岩漿的設定。
-- 原版岩漿不能游泳，所以兩個 `lavaSwimming…` 選項預設都是關閉的。按你的情況開啟對應的一項即可（兩項互相獨立）：開啟後在岩漿中按住衝刺、眼睛浸在岩漿裡，就會像在水中一樣進入游泳狀態，移動交回液體物理，跳躍只作上浮、不會展開鞘翅。
+- 原版岩漿不能游泳，所以 `lavaSwimming` 預設關閉。開啟後在岩漿中按住衝刺、眼睛浸在岩漿裡，就會像在水中一樣進入游泳狀態：移動改用水的物理（原版岩漿物理每刻把水平速度減半、且沒有衝刺加成，游起來像在下沉），因此可以衝刺、也可以上浮，跳躍只作上浮、不會展開鞘翅。`lavaSwimmingRequiresFireResistance` 將它限定為「只有帶耐火效果的玩家可以」。這兩個選項都不影響岩漿中的滑翔。
 - 數值超出範圍會回退到該項預設值並寫入日誌。檔案損毀時會使用預設值，並保留你的原檔案，方便自行修正。
 - 設定在啟動時讀取，修改後請重新啟動客戶端或伺服器。多人遊戲中兩邊請保持一致。
 

@@ -9,22 +9,38 @@ Simplified Chinese section.
 -------------------------
 
 Added
-  * Optional lava swimming, controlled by two new config options:
-    `lavaSwimmingWithFireResistance` and `lavaSwimmingWithoutFireResistance`. Both are off
-    by default, because vanilla never enters the swimming state outside of water.
-  * With the option matching the player's situation enabled, holding sprint with your eyes
-    in lava enters the same swimming state as water: liquid movement takes over and jump
-    means "swim up" instead of opening the elytra. Lava gliding is unchanged while both
-    options stay off.
-  * Five integration checks cover the defaults, both Fire Resistance cases, and that lava
-    swimming blocks the glide launch (57 checks in total).
+  * Optional lava swimming, controlled by `lavaSwimming` plus an optional
+    `lavaSwimmingRequiresFireResistance` requirement. Both are off by default, because vanilla
+    never enters the swimming state outside of water. 1.0.2 briefly shipped two independent
+    switches (`lavaSwimmingWithFireResistance` / `lavaSwimmingWithoutFireResistance`), which
+    could not express the real choice — being fire resistant can never make swimming harder —
+    so config files that still use them are migrated when they are loaded.
+  * With `lavaSwimming` on, holding sprint with your eyes in lava enters the same swimming state
+    as water, and jump means "swim up" instead of opening the elytra. Lava gliding is unchanged
+    by either option.
   * Settings screen for Mod Menu (client side), so every option can be changed in game. Mod
     Menu stays optional: it is only a compile-time dependency, and the entrypoint is loaded
     only when Mod Menu is actually installed. The screen edits the same config file and writes
     it when it is closed.
 
+Fixed
+  * Lava swimming could not be sustained. The client cancels a swimming sprint as soon as the
+    player is not in water, so the state was dropped again in the same tick it was entered.
+    The sprint gates (`canStartSprinting`, `shouldStopSwimSprinting`) now accept lava while the
+    option is on, and `updateSwimming` distinguishes entering from keeping, like vanilla does
+    for water.
+  * Lava swimming moved with the lava physics, which halves the horizontal speed every tick and
+    has no sprint bonus at all, so it felt like sinking rather than swimming. A lava swimmer is
+    now moved with the water fluid physics, so sprinting and swimming up work as in water.
+  * The Mod Menu screen offered two independent lava swimming switches whose combinations made
+    no sense: "you may swim without Fire Resistance, but not with it". They are replaced by one
+    switch plus a Fire Resistance requirement, which is the only meaningful pair.
+
 Changed
   * Version bumped to 1.0.2+mc26.2.
+  * Integration suite extended to 80 checks: entering, keeping the state at the lava surface,
+    leaving the lava, ending it by releasing sprint, the Fire Resistance requirement, the
+    legacy config migration, the water-physics swap, and the unchanged water behaviour.
 
 
 1.0.1+mc26.2 - 2026-09-28
@@ -79,19 +95,29 @@ License
 ------------------------------------
 
 新增
-  * 可选的岩浆游泳，由两个新配置项控制：`lavaSwimmingWithFireResistance` 与
-    `lavaSwimmingWithoutFireResistance`，默认都是关闭——原版在非水液体里不会进入游泳
-    状态，所以在启用对应选项之前，岩浆依旧不能游泳。
-  * 开启与自身情况相符的那一项后，在岩浆中按住冲刺、眼睛浸在岩浆里，就会像在水里一样
-    进入游泳状态：移动交回液体物理，跳跃只作上浮、不再展开鞘翅。两项都关闭时，岩浆滑翔
-    照旧，行为与 1.0.1 一致。
-  * 新增 5 项集成检查，覆盖默认值、两种耐火情况，以及「岩浆游泳阻止起飞」（合计 57 项）。
+  * 可选的岩浆游泳，由 `lavaSwimming` 加一个可选的 `lavaSwimmingRequiresFireResistance` 限定条件
+    控制，默认都关闭——原版在非水液体里不会进入游泳状态。1.0.2 曾短暂提供两个互相独立的开关
+    （`lavaSwimmingWithFireResistance` / `lavaSwimmingWithoutFireResistance`），它们无法表达真正
+    的取舍（有耐火只会更安全，绝不会让游泳更难），因此仍在使用旧键的配置文件会在加载时自动迁移。
+  * 开启 `lavaSwimming` 后，在岩浆中按住冲刺、眼睛浸在岩浆里，就会像在水里一样进入游泳状态，
+    跳跃只作上浮、不再展开鞘翅。两个选项都不影响岩浆中的滑翔。
   * 新增 Mod Menu 游戏内设置界面（客户端），所有选项都能在游戏里改。Mod Menu 仍是可选项：只在
     编译期依赖，入口只有在确实安装了 Mod Menu 时才会加载。界面编辑的是同一份配置文件，关闭时
     写回。
 
+修复
+  * 岩浆游泳状态无法维持。客户端在玩家不处于水中时会立刻取消游泳疾跑，于是状态在进入的同一
+    游戏刻就被撤销。疾跑判定（`canStartSprinting`、`shouldStopSwimSprinting`）现在在选项开启时
+    也接受岩浆，`updateSwimming` 也像原版对水那样区分「进入」与「维持」。
+  * 岩浆游泳原先是按岩浆物理移动的，而岩浆物理每个游戏刻把水平速度减半、且完全没有疾跑加成，
+    游起来像在下沉而不是游泳。现在岩浆游泳者改用水的流体物理，疾跑与上浮都和水里一致。
+  * Mod Menu 界面上的两个岩浆游泳开关存在逻辑错误：它们的组合会出现「没抗火能游、有抗火反而
+    不能游」这种说不通的状态。现在改成一个总开关加一个「是否需要抗火」的限定条件。
+
 变更
   * 版本号升到 1.0.2+mc26.2。
+  * 集成测试扩展到 80 项：进入、在岩浆液面维持、离开岩浆、松开冲刺结束、耐火限定条件、旧配置
+    迁移、水物理替换，以及水中行为不变。
 
 
 1.0.1+mc26.2 - 2026-09-28（简体中文）

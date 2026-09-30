@@ -3,5 +3,6 @@
   "package": "dev.elytrafluidflight.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": ["LivingEntityMixin", "PlayerMixin", "EntityMixin"],
+  "client": ["LocalPlayerMixin"],
   "injectors": { "defaultRequire": 1 }
 }

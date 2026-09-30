@@ -50,7 +50,7 @@ Do not install the file whose name ends with `-sources.jar`; that one is for dev
 ## How to use
 
 - Fly into water or lava with your elytra open: the glide continues, at the speed set by your config.
-- Want to swim instead? Hold sprint with your eyes under water. That enters the vanilla swimming state: water movement takes over (swim, dive, float) and jump means "swim up" instead of opening the elytra. Stop sprinting and the glide resumes. Water only — sprinting in lava changes nothing.
+- Want to swim instead? Hold sprint with your eyes under water. That enters the vanilla swimming state: water movement takes over (swim, dive, float) and jump means "swim up" instead of opening the elytra. Stop sprinting and the glide resumes. Water only — sprinting in lava changes nothing unless you enable `lavaSwimming` below.
 - Already in a liquid? Swim clear of the bottom so you are no longer standing on a block, then press jump to open the elytra.
 - Right-click a firework while gliding — including in water and lava — to boost.
 - Landing on the ground closes the elytra, exactly as in vanilla.
@@ -69,8 +69,8 @@ With [Mod Menu](https://modrinth.com/mod/modmenu) installed you can also change 
   "waterSpeedMultiplier": 0.6,
   "lavaSpeedMultiplier": 0.35,
   "lavaRequiresFireResistance": false,
-  "lavaSwimmingWithFireResistance": false,
-  "lavaSwimmingWithoutFireResistance": false
+  "lavaSwimming": false,
+  "lavaSwimmingRequiresFireResistance": false
 }
 ```
 
@@ -79,15 +79,15 @@ With [Mod Menu](https://modrinth.com/mod/modmenu) installed you can also change 
 | `waterSpeedMultiplier` | `0.6` | Drag strength while gliding in water: lower means thicker water. See the notes below. |
 | `lavaSpeedMultiplier` | `0.35` | Same, for lava — lower means thicker lava. |
 | `lavaRequiresFireResistance` | `false` | Set to `true` to require the Fire Resistance effect before gliding in lava. When the effect runs out, lava gliding ends. |
-| `lavaSwimmingWithFireResistance` | `false` | Allow the swimming state in lava while you have Fire Resistance. Vanilla never enters it outside of water. |
-| `lavaSwimmingWithoutFireResistance` | `false` | Same, for lava swimming without Fire Resistance. |
+| `lavaSwimming` | `false` | Allow the swimming state in lava. Vanilla never enters it outside of water, so this is off by default. |
+| `lavaSwimmingRequiresFireResistance` | `false` | Only let players with the Fire Resistance effect swim in lava. This is a requirement, not a second permission: being fire resistant can never make swimming harder. |
 
 Things worth knowing:
 
 - The valid range is `0 < value <= 1`. It is a drag strength: lower values mean a thicker liquid, and `1.0` behaves exactly like vanilla air physics.
 - For stability only a tenth of the configured strength is applied as damping each tick, so `0.6` keeps roughly 96% of your speed per tick and `0.35` roughly 93.5%. That gives a clear "thicker liquid" feel while still letting you glide; the raw value is never multiplied into your entire velocity, which would bring a glide to a standstill within half a second.
 - If water and lava are detected at the same time on a liquid boundary, the lava setting wins.
-- Lava is not swimmable in vanilla, so the two `lavaSwimming…` options are off by default. Turn on the one that matches your situation — they apply independently: holding sprint with your eyes in lava then puts you into the same swimming state as water, liquid movement takes over, and jump means "swim up" instead of opening the elytra.
+- Lava is not swimmable in vanilla, so `lavaSwimming` is off by default. Turn it on and holding sprint with your eyes in lava puts you into the same swimming state as water: movement switches to the water physics — vanilla lava movement halves your horizontal speed every tick and cannot be sprinted, which felt like sinking — so you can sprint and swim up, and jump means "swim up" instead of opening the elytra. `lavaSwimmingRequiresFireResistance` narrows it to players with the Fire Resistance effect. Gliding through lava is unaffected by either option.
 - An out-of-range value falls back to that option's default and is logged. If the file is corrupt, the defaults are used and your file is left untouched so you can fix it.
 - Settings are read at startup: restart the game or server after editing. In multiplayer, keep both sides the same.
 
